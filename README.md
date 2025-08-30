@@ -63,6 +63,55 @@ gcloud config get-value project
 gcloud auth list
 ```
 
+## Docker コマンド
+
+アプリケーションのコンテナ化とローカル実行に必要な基本的な Docker コマンドを紹介します。
+
+| コマンド | 説明 | 実行内容 | 初心者向けポイント |
+|---------|------|----------|-------------------|
+| `docker build -t 今のディレクトリ .` | Docker イメージのビルド | • 現在のディレクトリの Dockerfile からイメージを作成<br>• `-t` オプションでイメージに名前（タグ）を付与<br>• `.` は現在のディレクトリを指定 | • Dockerfile が現在のディレクトリに必要<br>• 「今のディレクトリ」部分は実際のプロジェクト名に変更<br>• ビルドには時間がかかる場合がある |
+| `docker run -d -p 8080:8080 今のディレクトリ` | コンテナの実行 | • ビルドしたイメージからコンテナを起動<br>• `-d` でバックグラウンド実行<br>• `-p 8080:8080` でポート 8080 をマッピング | • `-d` がないとターミナルがブロックされる<br>• ポート番号はアプリケーションに合わせて変更<br>• イメージ名は build 時のタグと一致させる |
+| `http://localhost:8080` | アプリケーションへのアクセス | • ブラウザで実行中のコンテナにアクセス<br>• ローカル開発環境での動作確認 | • コンテナが正常に起動していることを確認<br>• ポート番号は docker run で指定したものと一致<br>• アプリケーションの起動に時間がかかる場合がある |
+| `docker info` | Docker システム情報表示 | • Docker の設定情報とシステム状態を表示<br>• インストール状況やリソース使用量を確認 | • Docker が正しくインストールされているかの確認<br>• トラブルシューティング時に有用<br>• システムリソースの確認にも使用 |
+| `docker ps` | 実行中コンテナ一覧 | • 現在実行中の全てのコンテナを表示<br>• コンテナ ID、イメージ名、ポートマッピングなどを確認 | • `-a` オプションで停止済みコンテナも表示<br>• コンテナの動作状況を確認<br>• コンテナ ID は stop コマンドで使用 |
+| `docker stop CONTAINER_ID` | コンテナの停止 | • 指定したコンテナを安全に停止<br>• CONTAINER_ID は `docker ps` で確認 | • コンテナ ID は最初の数文字のみでも可<br>• 複数のコンテナを同時に停止可能<br>• 強制停止は `docker kill` を使用 |
+
+**Docker 使用例:**
+```bash
+# Docker イメージをビルド（例：my-app という名前）
+docker build -t my-app .
+
+# コンテナをバックグラウンドで実行
+docker run -d -p 8080:8080 my-app
+
+# ブラウザでアクセス
+# http://localhost:8080
+
+# 実行中のコンテナを確認
+docker ps
+
+# Docker システム情報を確認
+docker info
+
+# コンテナを停止（CONTAINER_ID は docker ps で確認）
+docker stop CONTAINER_ID
+```
+
+### Dockerfile の基本例
+
+Docker を使用するには、プロジェクトルートに Dockerfile が必要です：
+
+```dockerfile
+# 例：Node.js アプリケーション用 Dockerfile
+FROM node:18
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 8080
+CMD ["npm", "start"]
+```
+
 ## 参考リンク
 
 - [Google Cloud CLI ドキュメント](https://cloud.google.com/sdk/docs)
