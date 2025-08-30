@@ -70,16 +70,25 @@ gcloud auth list
 | コマンド | 説明 | 実行内容 | 初心者向けポイント |
 |---------|------|----------|-------------------|
 | `docker build -t 今のディレクトリ .` | Docker イメージのビルド | • 現在のディレクトリの Dockerfile からイメージを作成<br>• `-t` オプションでイメージに名前（タグ）を付与<br>• `.` は現在のディレクトリを指定 | • Dockerfile が現在のディレクトリに必要<br>• 「今のディレクトリ」部分は実際のプロジェクト名に変更<br>• ビルドには時間がかかる場合がある |
+| `docker images` | Docker イメージ一覧表示 | • ローカルに保存されている全ての Docker イメージを表示<br>• イメージ名、タグ、作成日時、サイズを確認 | • ビルドしたイメージの確認に使用<br>• 不要なイメージの特定にも便利<br>• `docker rmi` でイメージを削除可能 |
 | `docker run -d -p 8080:8080 今のディレクトリ` | コンテナの実行 | • ビルドしたイメージからコンテナを起動<br>• `-d` でバックグラウンド実行<br>• `-p 8080:8080` でポート 8080 をマッピング | • `-d` がないとターミナルがブロックされる<br>• ポート番号はアプリケーションに合わせて変更<br>• イメージ名は build 時のタグと一致させる |
 | `http://localhost:8080` | アプリケーションへのアクセス | • ブラウザで実行中のコンテナにアクセス<br>• ローカル開発環境での動作確認 | • コンテナが正常に起動していることを確認<br>• ポート番号は docker run で指定したものと一致<br>• アプリケーションの起動に時間がかかる場合がある |
-| `docker info` | Docker システム情報表示 | • Docker の設定情報とシステム状態を表示<br>• インストール状況やリソース使用量を確認 | • Docker が正しくインストールされているかの確認<br>• トラブルシューティング時に有用<br>• システムリソースの確認にも使用 |
 | `docker ps` | 実行中コンテナ一覧 | • 現在実行中の全てのコンテナを表示<br>• コンテナ ID、イメージ名、ポートマッピングなどを確認 | • `-a` オプションで停止済みコンテナも表示<br>• コンテナの動作状況を確認<br>• コンテナ ID は stop コマンドで使用 |
+| `docker logs CONTAINER_ID` | コンテナのログ表示 | • 指定したコンテナの標準出力とエラーログを表示<br>• アプリケーションの動作状況やエラーを確認 | • コンテナ ID は `docker ps` で確認<br>• `-f` オプションでリアルタイム表示<br>• デバッグ時に最も重要なコマンド |
+| `docker exec -it CONTAINER_ID bash` | コンテナ内でコマンド実行 | • 実行中のコンテナ内でコマンドを実行<br>• `-it` オプションで対話モード<br>• コンテナ内部の調査や設定変更が可能 | • コンテナが実行中である必要がある<br>• `bash` の代わりに `sh` を使用する場合もある<br>• デバッグや調査に便利 |
 | `docker stop CONTAINER_ID` | コンテナの停止 | • 指定したコンテナを安全に停止<br>• CONTAINER_ID は `docker ps` で確認 | • コンテナ ID は最初の数文字のみでも可<br>• 複数のコンテナを同時に停止可能<br>• 強制停止は `docker kill` を使用 |
+| `docker rm CONTAINER_ID` | コンテナの削除 | • 停止済みのコンテナを完全に削除<br>• ディスク容量の節約とクリーンアップ | • 実行中のコンテナは削除できない<br>• 先に `docker stop` で停止が必要<br>• `-f` オプションで強制削除可能 |
+| `docker rmi IMAGE_ID` | イメージの削除 | • 不要な Docker イメージを削除<br>• IMAGE_ID は `docker images` で確認 | • 使用中のイメージは削除できない<br>• 関連コンテナを先に削除が必要<br>• ディスク容量の節約に重要 |
+| `docker pull IMAGE_NAME` | イメージのダウンロード | • Docker Hub やレジストリからイメージをダウンロード<br>• Google Cloud Container Registry からも取得可能 | • `docker run` 時に自動でダウンロードも可能<br>• 事前ダウンロードで起動時間短縮<br>• バージョンタグの指定も可能 |
+| `docker info` | Docker システム情報表示 | • Docker の設定情報とシステム状態を表示<br>• インストール状況やリソース使用量を確認 | • Docker が正しくインストールされているかの確認<br>• トラブルシューティング時に有用<br>• システムリソースの確認にも使用 |
 
 **Docker 使用例:**
 ```bash
 # Docker イメージをビルド（例：my-app という名前）
 docker build -t my-app .
+
+# ビルド済みイメージの確認
+docker images
 
 # コンテナをバックグラウンドで実行
 docker run -d -p 8080:8080 my-app
@@ -90,11 +99,26 @@ docker run -d -p 8080:8080 my-app
 # 実行中のコンテナを確認
 docker ps
 
+# コンテナのログを確認（デバッグ時）
+docker logs CONTAINER_ID
+
+# コンテナ内部にアクセス（調査・デバッグ時）
+docker exec -it CONTAINER_ID bash
+
+# Docker Hub からイメージをダウンロード
+docker pull nginx:latest
+
 # Docker システム情報を確認
 docker info
 
 # コンテナを停止（CONTAINER_ID は docker ps で確認）
 docker stop CONTAINER_ID
+
+# 停止済みコンテナを削除
+docker rm CONTAINER_ID
+
+# 不要なイメージを削除
+docker rmi IMAGE_ID
 ```
 
 ### Dockerfile の基本例
