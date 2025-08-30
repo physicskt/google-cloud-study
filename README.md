@@ -10,7 +10,8 @@ Google Cloud を使い始めるために必要な基本的なコマンドを紹�
 |---------|------|----------|-------------------|
 | `gcloud init` | 初回セットアップ（対話式） | • Google アカウントでのログイン<br>• プロジェクトの選択または作成<br>• デフォルトのリージョン・ゾーンの設定 | • 初めて Google Cloud CLI を使う場合は、まずこのコマンドを実行<br>• ブラウザが開いて Google アカウントでの認証が必要<br>• 複数のプロジェクトがある場合は選択可能 |
 | `gcloud auth login` | Google アカウント認証 | • ブラウザが開いて Google アカウントでの認証<br>• Google Cloud リソースへのアクセス権限の取得 | • `gcloud init` 実行済みの場合は通常不要<br>• 別のアカウントでログインし直したい場合に使用<br>• 複数のアカウントを管理している場合に便利 |
-| `gcloud config set project PROJECT_ID` | プロジェクト設定 | • デフォルトで使用するプロジェクトの設定<br>• 以降の gcloud コマンドでこのプロジェクトが使用される | • `PROJECT_ID` は実際のプロジェクト ID に置き換える<br>• プロジェクト ID は Google Cloud Console で確認<br>• プロジェクトを切り替えたい場合に使用 |
+| `gcloud projects list` | プロジェクト一覧表示 | • アクセス可能な全ての Google Cloud プロジェクトを表示<br>• プロジェクト ID、名前、ステータスを確認<br>• 使用可能なプロジェクトの選択に役立つ | • 認証後にまず実行すると良い<br>• プロジェクト ID をコピーして設定コマンドで使用<br>• 権限がないプロジェクトは表示されない |
+| `gcloud config set project PROJECT_ID` | プロジェクト設定 | • デフォルトで使用するプロジェクトの設定<br>• 以降の gcloud コマンドでこのプロジェクトが使用される | • `PROJECT_ID` は実際のプロジェクト ID に置き換える<br>• プロジェクト ID は `gcloud projects list` で確認<br>• プロジェクトを切り替えたい場合に使用 |
 | `gcloud services enable SERVICE_NAME` | サービスの有効化 | • 指定した Google Cloud サービスを有効化<br>• API の使用許可を設定 | • 例: `gcloud services enable compute.googleapis.com`<br>• サービスを使用する前に必ず有効化が必要<br>• 有効化には数分かかる場合がある |
 | `gcloud builds submit --tag gcr.io/PROJECT_ID/IMAGE_NAME` | Cloud Build でイメージをビルド | • ソースコードから Docker イメージを自動ビルド<br>• Google Container Registry (GCR) に自動プッシュ<br>• クラウド上でのビルド処理 | • Cloud Build API の有効化が必要<br>• PROJECT_ID は実際のプロジェクト ID に置き換える<br>• IMAGE_NAME は任意のイメージ名を指定<br>• Dockerfile または buildpacks が必要 |
 | `gcloud compute instances list` | VM インスタンス一覧表示 | • 現在のプロジェクトの全ての VM インスタンスを表示<br>• インスタンス名、ゾーン、ステータスなどの情報を確認 | • Compute Engine サービスが有効でない場合はエラー<br>• インスタンスがない場合は空の結果が表示<br>• `--zones=ZONE` でゾーンを指定可能 |
@@ -26,6 +27,9 @@ gcloud init
 
 # 認証（必要に応じて）
 gcloud auth login
+
+# 利用可能なプロジェクト一覧を確認
+gcloud projects list
 
 # プロジェクト設定
 gcloud config set project my-gcp-project-123
