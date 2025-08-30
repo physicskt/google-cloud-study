@@ -78,7 +78,9 @@ gcloud auth list
 | `docker exec -it CONTAINER_ID bash` | コンテナ内でコマンド実行 | • 実行中のコンテナ内でコマンドを実行<br>• `-it` オプションで対話モード<br>• コンテナ内部の調査や設定変更が可能 | • コンテナが実行中である必要がある<br>• `bash` の代わりに `sh` を使用する場合もある<br>• デバッグや調査に便利 |
 | `docker stop CONTAINER_ID` | コンテナの停止 | • 指定したコンテナを安全に停止<br>• CONTAINER_ID は `docker ps` で確認 | • コンテナ ID は最初の数文字のみでも可<br>• 複数のコンテナを同時に停止可能<br>• 強制停止は `docker kill` を使用 |
 | `docker rm CONTAINER_ID` | コンテナの削除 | • 停止済みのコンテナを完全に削除<br>• ディスク容量の節約とクリーンアップ | • 実行中のコンテナは削除できない<br>• 先に `docker stop` で停止が必要<br>• `-f` オプションで強制削除可能 |
+| `docker container prune` | 停止済みコンテナの一括削除 | • 停止している全てのコンテナを一括削除<br>• 確認プロンプトが表示される<br>• ディスク容量を効率的に節約 | • 実行中のコンテナには影響しない<br>• 削除前に確認プロンプトで `y` を入力<br>• 定期的なクリーンアップに便利 |
 | `docker rmi IMAGE_ID` | イメージの削除 | • 不要な Docker イメージを削除<br>• IMAGE_ID は `docker images` で確認 | • 使用中のイメージは削除できない<br>• 関連コンテナを先に削除が必要<br>• ディスク容量の節約に重要 |
+| `docker image prune -a` | 未使用イメージの一括削除 | • 使用されていない全ての Docker イメージを削除<br>• ディスク容量を大幅に節約<br>• 確認プロンプトが表示される | • `-a` は全ての未使用イメージを対象<br>• 削除前に確認プロンプトで `y` を入力<br>• 定期的な実行でディスク容量を管理 |
 | `docker pull IMAGE_NAME` | イメージのダウンロード | • Docker Hub やレジストリからイメージをダウンロード<br>• Google Cloud Container Registry からも取得可能 | • `docker run` 時に自動でダウンロードも可能<br>• 事前ダウンロードで起動時間短縮<br>• バージョンタグの指定も可能 |
 | `docker info` | Docker システム情報表示 | • Docker の設定情報とシステム状態を表示<br>• インストール状況やリソース使用量を確認 | • Docker が正しくインストールされているかの確認<br>• トラブルシューティング時に有用<br>• システムリソースの確認にも使用 |
 
@@ -117,8 +119,14 @@ docker stop CONTAINER_ID
 # 停止済みコンテナを削除
 docker rm CONTAINER_ID
 
+# 停止済みコンテナを一括削除（クリーンアップ）
+docker container prune
+
 # 不要なイメージを削除
 docker rmi IMAGE_ID
+
+# 未使用イメージを一括削除（ディスク容量節約）
+docker image prune -a
 ```
 
 ### Dockerfile の基本例
