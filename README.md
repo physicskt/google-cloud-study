@@ -156,3 +156,69 @@ CMD ["npm", "start"]
 
 - [Google Cloud CLI ドキュメント](https://cloud.google.com/sdk/docs)
 - [gcloud コマンドリファレンス](https://cloud.google.com/sdk/gcloud/reference)
+
+## Quick Start for Development with gcloud and docker
+
+### Windows PowerShell
+#### ポリシー緩める
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+```
+
+#### 現在シェルに設定されているプロジェクトIDの確認
+```bash
+gcloud config get-value project
+```
+
+#### プロジェクトID がわからない場合
+```bash
+gcloud projects list
+```
+
+#### 例: プロジェクトIDが web-gas-test2 の場合
+```bash
+gcloud config set project web-gas-test2
+```
+
+#### docker build
+##### web-gas-test2 が今いるディレクトリ
+```bash
+docker build -t web-gas-test2 .
+```
+
+#### gcloud に転送してビルド
+- 現在のディレクトリの内容を Google Cloud Build に送信し、
+- Dockerイメージをビルドして 
+- Google Container Registry（GCR）に 
+- gcr.io/PROJECT_ID/IMAGE_NAME という名前で保存する
+
+```bash
+gcloud builds submit --tag gcr.io/web-gas-test2/test
+gcloud builds submit --tag gcr.io/PROJECT_ID/IMAGE_NAME
+```
+
+#### サービスを起動
+```bash
+gcloud run deploy web-gas-test2 --image gcr.io/web-gas-test2/test --platform managed --region asia-northeast1 --allow-unauthenticated
+```
+
+#### サービス起動を確認
+```bash
+curl 起動したURL
+```
+
+#### 現在のサービス一覧を確認
+```bash
+gcloud run services list
+gcloud run services list --region asia-northeast1
+```
+
+#### 特定サービスの詳細を確認
+```bash
+gcloud run services describe web-gas-test2 --region asia-northeast1
+```
+
+#### サービスの完全削除（停止）
+```bash
+gcloud run services delete web-gas-test2 --region asia-northeast1
+```
