@@ -1,0 +1,17 @@
+# FastAPI アプリケーション用 Dockerfile
+FROM python:3.11-slim
+
+WORKDIR /web-gas-test2-app
+
+# 依存関係をコピーしてインストール
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# アプリケーションファイルをコピー
+COPY . .
+
+# 複数のポートを公開（FastAPI用）
+EXPOSE 8000 8001 8002
+
+# FastAPIアプリケーションを起動
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
