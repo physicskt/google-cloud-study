@@ -137,6 +137,15 @@ docker rmi IMAGE_ID
 docker image prune -a
 ```
 
+### 複数ポートでの実行例
+
+複数のポートを使用するアプリケーションの場合：
+
+```bash
+# 実際に複数ポートでrunする時
+docker run -p 8000:8000 -p 8001:8001 -p 8002:8002 your-app-name
+```
+
 ### Dockerfile の基本例
 
 Docker を使用するには、プロジェクトルートに Dockerfile が必要です：
@@ -161,6 +170,8 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 COPY . .
+# 複数のポートを公開
+EXPOSE 8000 8001 8002
 CMD ["python", "app.py"]
 ```
 
