@@ -152,6 +152,18 @@ EXPOSE 8080
 CMD ["npm", "start"]
 ```
 
+```dockerfile
+# 例：Python アプリケーション用 Dockerfile
+FROM python:3.11-slim
+
+WORKDIR /web-gas-test2-app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY . .
+CMD ["python", "app.py"]
+```
+
 ## 参考リンク
 
 - [Google Cloud CLI ドキュメント](https://cloud.google.com/sdk/docs)
